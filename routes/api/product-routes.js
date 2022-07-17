@@ -7,8 +7,15 @@ const { Product, Category, Tag, ProductTag } = require("../../models");
 router.get("/", (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
-  console.log("GET /api/products  triggered");
-  Product.findAll({})
+  console.log("\nGET /api/products  triggered\n");
+  Product.findAll(
+    {
+      include: [Category],
+    },
+    {
+      include: [Tag],
+    }
+  )
     .then((dbData) => {
       return res.json(dbData);
     })
@@ -21,6 +28,30 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  console.log("\nGET /api/categories/:id  triggered\n");
+  Product.findOne({
+    where: {
+      id: req.params.id,
+    },
+    include: [
+      {
+        model: Category,
+        attributes: ["id", "category_name"],
+      },
+      {
+        model: Tag,
+        attributes: ["id", "tag_name"],
+        through: ProductTag,
+        as: "product_tags",
+      },
+    ],
+  })
+    .then((dbData) => {
+      return res.json(dbData);
+    })
+    .catch((error) => {
+      return res.status(500).json(error.message);
+    });
 });
 
 // create new product
@@ -99,6 +130,16 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   // delete one product by its `id` value
+  console.log("\nDELETE /api/products/:id  triggered\n");
+  Product.destroy({
+    where: { id: req.params.id },
+  })
+    .then((dbData) => {
+      return res.json(dbData);
+    })
+    .catch((error) => {
+      return res.status(500).json(error.message);
+    });
 });
 
 module.exports = router;

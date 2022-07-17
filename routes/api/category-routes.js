@@ -70,7 +70,7 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   // delete a category by its `id` value
-  console.log("DELETE /api/categories/:id  triggered");
+  console.log("\nDELETE /api/categories/:id  triggered\n");
   Category.destroy({
     where: { id: req.params.id },
   })
