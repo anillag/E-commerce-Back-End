@@ -8,14 +8,18 @@ router.get("/", (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
   console.log("\nGET /api/products  triggered\n");
-  Product.findAll(
-    {
-      include: [Category],
-    },
-    {
-      include: [Tag],
-    }
-  )
+  Product.findAll({
+    include: [
+      {
+        model: Category,
+      },
+      {
+        model: Tag,
+        through: ProductTag,
+        as: "product_tags",
+      },
+    ],
+  })
     .then((dbData) => {
       return res.json(dbData);
     })
@@ -36,11 +40,9 @@ router.get("/:id", (req, res) => {
     include: [
       {
         model: Category,
-        attributes: ["id", "category_name"],
       },
       {
         model: Tag,
-        attributes: ["id", "tag_name"],
         through: ProductTag,
         as: "product_tags",
       },
