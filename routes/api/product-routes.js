@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
-  console.log("\nGET /api/categories/:id  triggered\n");
+  console.log("\nGET /api/products/:id  triggered\n");
   Product.findOne({
     where: {
       id: req.params.id,
